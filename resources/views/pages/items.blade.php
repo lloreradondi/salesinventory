@@ -1,0 +1,10 @@
+@extends('index')
+@section('css_files')
+  @include('css_Files')
+@stop
+@section('javascript_files')
+  @include('javascript_files') 
+@stop
+@section('content') 
+	pekpek
+@stop
