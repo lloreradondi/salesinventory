@@ -14,9 +14,12 @@
 Route::get('/', function () {
     return view('pages.dashboard');
 });
-Route::get('/items', function() {
-	return view('pages.items');
+Route::get('/orders', function() {
+	return view('pages.orders');
 });
 Route::get('/clients', function() {
 	return view('pages.clients');
+});
+Route::get('/items', function() {
+	return view('pages.items');
 });

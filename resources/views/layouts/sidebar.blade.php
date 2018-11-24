@@ -6,8 +6,13 @@
 </li> 
 <li class="nav-item">
   <a class="nav-link" href="items">
-    <i class="fas fa-fw fa-chart-area"></i>
+    <i class="fas fa-fw fa-table"></i>
     <span>Items</span></a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="orders">
+    <i class="fas fa-fw fa-chart-area"></i>
+    <span>Orders</span></a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="clients">

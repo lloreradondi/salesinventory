@@ -28,7 +28,7 @@
               "columnDefs": [{
                   "targets": -1,
                   "data": null,
-                  "defaultContent": "<p><i class=fas fa-fw fa-table></i>rr</p>"
+                  "defaultContent": "<p><i class='fas fa-fw fa-table'></i>rr</p>"
               }]
           });
 

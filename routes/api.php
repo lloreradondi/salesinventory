@@ -19,3 +19,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/client/save', 'ClientsController@save');
 Route::post('/client/list', 'ClientsController@list');
+
+Route::get('/items/list/{id}', 'ItemsController@list');
+Route::post('/items/save', 'ItemsController@save');
+Route::post('/items/update/{id}', 'ItemsController@update');
+
+Route::post('/orders/save', 'OrdersController@save');
+Route::post('/orders/list', 'OrdersController@list');
