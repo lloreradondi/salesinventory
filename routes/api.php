@@ -25,4 +25,4 @@ Route::post('/items/save', 'ItemsController@save');
 Route::post('/items/update/{id}', 'ItemsController@update');
 
 Route::post('/orders/save', 'OrdersController@save');
-Route::post('/orders/list', 'OrdersController@list');
+Route::get('/orders/list/{item_code}', 'OrdersController@list');

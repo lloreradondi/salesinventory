@@ -8,80 +8,8 @@
   <script>
     $( document ).ready(function() {  
     	var values = {'all':1}; 
-    	var itemArray;
     	loadItems();
   	    
-   //      $.ajax({
-   //        data: values,
-   //        type: "GET",
-   //        url: 'api/items/list',
-   //        context: document.body
-   //      }).done(function(response) {   
-   //      	itemArray = response.response; 
-
-   //  	    var editor = new $.fn.dataTable.Editor( {
-   //  	    	ajax: "api/items/update/_id_",
-			//     data: itemArray,
-			//     table: "#dt", 
-			//     idSrc:  'id',
-			//     fields: [ {
-			//             label: "Name:",
-			//             name: "name"
-			//         }, {
-			//             label: "Last name:",
-			//             name: "code"
-			//         }, {
-			//             label: "Last name:",
-			//             name: "beginning_price"
-			//         }, {
-			//             label: "Last name:",
-			//             name: "selling_price"
-			//         }, {
-			//             label: "Last name:",
-			//             name: "quantity"
-			//         }
-			//     ]
-			// } );
-
-        	
-
-			// $('#dt').on( 'click', 'tbody td:not(:first-child)', function (e) {
-		 //        editor.inline( this );
-		 //    } );
-   //        // var mytable = $('#dt').DataTable({
-   //        //     "dom": 'lBfrtip',
-   //        //     "buttons": [
-   //        //         {
-   //        //             extend: 'pdfHtml5',
-   //        //             download: 'open'
-   //        //         }
-   //        //     ],
-   //        //     "paging": true, 
-   //        //     "searching": true,
-   //        //     "ordering": true,
-   //        //     "info": true, 
-   //        // });
-
-   //        // $.each(response.response, function(i, item) { 
-   //        //     mytable.row.add([response.response[i].name, response.response[i].code, response.response[i].beginning_price,
-   //        //                      response.response[i].selling_price, response.response[i].quantity
-   //        //                     ]);
-   //        // }) 
-   //        // mytable.draw(); 
-
-   //        // $('#dt tbody').on( 'click', 'p', function () {
-   //        //     var data = mytable.row($(this).parents('tr')).data();
-   //        //     alert(data[0]);
-   //        // } );
-   //      });
-
-    
-		 
-		
-
-
-
-
         $('#show_item_modal').on( 'click', function () {
 	    	$('#myModal').modal('show'); 
 	    });

@@ -11,27 +11,32 @@ use App\Item;
 class OrdersController extends Controller
 {
 
-   public function list(Request $request) {
-   		if (!empty($request->item_code)) {
-   			$this->data['response'] = Order::select(
-   				'orders.id',
-   				'orders.item_name',
-   				'orders.item_code', 
-   				'orders.item_quantity', 
-   				'orders.selling_price', 
-   				'orders.created_at',
-   				'orders.status',
-   				'clients.first_name',
-   				'clients.last_name')
-   				->join('clients', 'orders.client_id', '=', 'clients.id')
-	   			->where('item_code', '=', $request->item_code)
-	   			->get();
-    	} else {
-    		$this->data['response'] = Order::select('*')
-	   			->get();
-    	}
+   public function list(Request $request, $item_code) {
+      if (!empty($item_code)) {
+        $data = $this->data['response'] = Order::select(
+          'orders.id',
+          'orders.item_name',
+          'orders.item_code', 
+          'orders.item_quantity', 
+          'orders.selling_price', 
+          'orders.created_at',
+          'orders.status',
+          'clients.first_name',
+          'clients.last_name')
+          ->join('clients', 'orders.client_id', '=', 'clients.id')
+          ->where('item_code', '=', $item_code)
+          ->get();  
+        return array("data"=> $data);
+      } else {
+        return array("data"=> Order::select('*')->get());
+      }
+   		// if (!empty($request->item_code)) {
+   			
+    	// } else {
+    		
+    	// }
 
-    	return $this->data;
+    	// return $this->data;
    		
    }
 
@@ -82,6 +87,7 @@ class OrdersController extends Controller
 
         	$isInserted = Order::insert(array(
         		'client_id' => $clientId,
+            'item_id' => $request->item_id,
         		'item_name' => $request->item_name,
         		'item_code' => $request->item_code,
         		'item_quantity' => $request->item_quantity,
