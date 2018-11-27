@@ -223,7 +223,7 @@
           context: document.body
         }).done(function(response) { 
         	alert(response.response.message);
-        	if (response.response.quantity_left == undefined) {
+        	if (response.response.message != "Order already disapproved") {
         		
         		$("#header_quantity"+i).text(response.response.quantity_left + " REMAINING");  
         	}
