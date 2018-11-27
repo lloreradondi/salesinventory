@@ -71,7 +71,7 @@
 	        	$("#facebook_link"+i).val("");
 	        	$("#quantity"+i).val("1");
         		alert(response.response.message); 
-        		loadDataTable(i, itemCode);
+        		reloadAjaxTable(i, itemCode);
         		resizeAccordion(i);
         		
         	}
@@ -159,36 +159,20 @@
   	function resizeAccordion(id) {
 		document.getElementById("ppp"+id).style.maxHeight = 100000 +"px";
 	}
+ 
 
-	// function loadData(i, code)
-	// {
-	// 	table = $('#dt'+i).DataTable({  
-	// 		destroy: true,
-	// 	    ajax: "/api/orders/list/"+ code,
-	// 	    type: "GET",
-	// 	    columns: [ 
-	// 	    	{ data: "id" },
-	// 	        { data: "first_name" },
-	// 	        { data: "last_name" },
-	// 	        { data: "selling_price" },
-	// 	        { data: "item_quantity" },
-	// 	        { defaultContent: "<i id='approve' class='fas fa-check-circle' style='font-size: 22px;'></i><i id='reject' class='fas fa-times-circle' style=' font-size: 22px;'></i>"}
-	// 	    ]
-	// 	} );
-	// }
-
-	
+	function reloadAjaxTable(i, code) {
+		$('#dt' + i).DataTable().ajax.reload();
+	}
 
   	function loadDataTable(i, code) {
-  		// table = $('#dt'+i).DataTable();
-  		console.log(i);
   		var dt = $('#dt'+i);
-  		dt.DataTable();
-  		dt.DataTable().destroy();
-  		var table = dt.DataTable({  
+  		
+  		var table = $("#dt"+ i).dataTable();
+  		table = dt.DataTable({  
 			destroy: true,
-		    // ajax: "/api/orders/list/"+code,
-		    ajax: 'url("/api/order/list"+code)',
+			deferRender:    true,
+		    ajax: "/api/orders/list/"+code,
 		    type: "GET",
 		    columns: [ 
 		    	{ data: "id" },
@@ -200,17 +184,14 @@
 		    ]
 		} );
 
-		dt.on('click', '#approve', function () {
+		dt.on('click', '#approve', function (e) {
             var data = table.row($(this).parents('tr')).data();
       		approveOrder(i, data.id, data.item_code);
         });
 
         dt.on('click', '#reject', function () {
-        	alert('reject');
-              // var data = table.row($(this).parents('tr')).data();
-              // console.log(data.id);
-
-          	disapproveOrder();
+            var data = table.row($(this).parents('tr')).data();
+          	disapproveOrder(i, data.id, data.item_code);
         });
 	}
 
@@ -225,14 +206,47 @@
           context: document.body
         }).done(function(response) { 
         	alert(response.response); 
-			loadDataTable(i, code);
+        	reloadAjaxTable(i, code);
         	resizeAccordion(i);
         	console.log(i);
         });
 	}
 
-	function disapproveOrder() {
+	function disapproveOrder(i, id, code) {
+		var values = {
+            'id': id
+	    }; 
+    	$.ajax({
+          type: "POST",
+          data: values,
+          url: 'api/order/disapprove',
+          context: document.body
+        }).done(function(response) { 
+        	alert(response.response.message);
+        	if (response.response.quantity_left == undefined) {
+        		
+        		$("#header_quantity"+i).text(response.response.quantity_left + " REMAINING");  
+        	}
 
+        	reloadAjaxTable(i, code);
+        	resizeAccordion(i);
+      //   	if (response.response.quantity_left <= 0) {
+    			
+    		// } else {
+    		// 	$("#header_quantity"+i).text(response.response.quantity_left + " REMAINING");  
+    		// }
+
+
+       //  	if (response.response.message != "Order already disapproved") {
+    			// $("#header_quantity"+i).text(response.response.quantity_left + " REMAINING");
+       //  	} else {
+
+       //  	}
+        	// alert(response.response); 
+        	// reloadAjaxTable(i, code);
+        	// resizeAccordion(i);
+        	// console.log(i);
+        });
 	}
 
   	$( document ).ready(function() {  

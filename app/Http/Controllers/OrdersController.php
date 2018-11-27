@@ -118,22 +118,26 @@ class OrdersController extends Controller
     $this->validate($request->all(), $this->rule);
 
     if (empty($this->data['error']['error_message'])) {
-      $order = Order::find($request->id)->get();
-
+      $order = Order::select('*')->where('id', '=', $request->id)->get();
+      // $order = Order::find($request->id)->get();
+      // return $order;
       if ($order[0]->status == 2) {
+        $this->data['response']['quantity_left'] = 100;
         $this->data['response']['message'] = "Order already disapproved";
         return $this->data;
       }
 
       $orderQuantity = $order[0]->item_quantity;
       $item = Item::select('*')
-        ->where('code', '=', $order[0]->item_code);
+        ->where('id', '=', $order[0]->item_id);
       $itemQuantity = $item->get()[0]->quantity;
       $item->update([
         'quantity' => $orderQuantity + $itemQuantity
       ]);
-      $order[0]->status = 2;
-      $order[0]->save();
+
+      $orderToUpdate = Order::find($request->id);
+      $orderToUpdate->status = 2;
+      $orderToUpdate->save();
       $this->data['response']['quantity_left'] = $orderQuantity + $itemQuantity;
       $this->data['response']['message'] = "Order successfully disapproved";
     } 
