@@ -55,7 +55,7 @@
     	$.ajax({
           type: "POST",
           data: values,
-          url: 'api/orders/save',
+          url: 'api/order/save',
           context: document.body
         }).done(function(response) { 
         	if (response.error.error_message.length > 0) {
@@ -100,6 +100,7 @@
 			              "<th>Last Name</th>" +
 			              "<th>Selling Price</th>" +
 			              "<th>Quantity</th>" +
+			              "<th>Actions</th>" +
 			            "</tr>" +
 			          "</thead>" +
 			        "</table>" +
@@ -159,20 +160,80 @@
 		document.getElementById("ppp"+id).style.maxHeight = 100000 +"px";
 	}
 
+	// function loadData(i, code)
+	// {
+	// 	table = $('#dt'+i).DataTable({  
+	// 		destroy: true,
+	// 	    ajax: "/api/orders/list/"+ code,
+	// 	    type: "GET",
+	// 	    columns: [ 
+	// 	    	{ data: "id" },
+	// 	        { data: "first_name" },
+	// 	        { data: "last_name" },
+	// 	        { data: "selling_price" },
+	// 	        { data: "item_quantity" },
+	// 	        { defaultContent: "<i id='approve' class='fas fa-check-circle' style='font-size: 22px;'></i><i id='reject' class='fas fa-times-circle' style=' font-size: 22px;'></i>"}
+	// 	    ]
+	// 	} );
+	// }
+
+	
+
   	function loadDataTable(i, code) {
-				$('#dt'+i).DataTable( {  
-	    			destroy: true,
-				    ajax: "/api/orders/list/"+ code,
-				    type: "GET",
-				    columns: [ 
-				    	{ data: "id" },
-				        { data: "first_name" },
-				        { data: "last_name" },
-				        { data: "selling_price" },
-				        { data: "item_quantity" }
-				    ]
-				} );
-			}
+  		// table = $('#dt'+i).DataTable();
+  		console.log(i);
+  		var dt = $('#dt'+i);
+  		dt.DataTable();
+  		dt.DataTable().destroy();
+  		var table = dt.DataTable({  
+			destroy: true,
+		    // ajax: "/api/orders/list/"+code,
+		    ajax: 'url("/api/order/list"+code)',
+		    type: "GET",
+		    columns: [ 
+		    	{ data: "id" },
+		        { data: "first_name" },
+		        { data: "last_name" },
+		        { data: "selling_price" },
+		        { data: "item_quantity" },
+		        { defaultContent: "<i id='approve' class='fas fa-check-circle' style='font-size: 22px;'></i><i id='reject' class='fas fa-times-circle' style=' font-size: 22px;'></i>"}
+		    ]
+		} );
+
+		dt.on('click', '#approve', function () {
+            var data = table.row($(this).parents('tr')).data();
+      		approveOrder(i, data.id, data.item_code);
+        });
+
+        dt.on('click', '#reject', function () {
+        	alert('reject');
+              // var data = table.row($(this).parents('tr')).data();
+              // console.log(data.id);
+
+          	disapproveOrder();
+        });
+	}
+
+	function approveOrder(i, id, code) {
+		var values = {
+            'id': id
+	    }; 
+    	$.ajax({
+          type: "POST",
+          data: values,
+          url: 'api/order/approve',
+          context: document.body
+        }).done(function(response) { 
+        	alert(response.response); 
+			loadDataTable(i, code);
+        	resizeAccordion(i);
+        	console.log(i);
+        });
+	}
+
+	function disapproveOrder() {
+
+	}
 
   	$( document ).ready(function() {  
          loadItems();
@@ -180,33 +241,5 @@
   </script>
 @stop
 @section('content') 
-
 	<div id="myBody"></div>
-
-	<!-- <div class="accordion col-md-12">
-		<div class="row">
-			<div class="col-md-3">ITEM 1</div>
-			<div class="col-md-3">3 PCS REMAINING</div>
-			<div class="col-md-3">CODE12121</div>
-			<div class="col-md-3">PHP 1,350.00</div>
-		</div>
-		
-	</div>
-	<div class="panel">
-		<div class="row"> 
-			<div class="col-md-3"> 
-			    <input type="text" class="form-control" id="first_name" placeholder="Enter first name" required> 
-			</div> 
-			<div class="col-md-3"> 
-			    <input type="text" class="form-control" id="last_name"  placeholder="Enter last name" required> 
-			</div> 
-			<div class="col-md-3"> 
-			    <input type="text" class="form-control" id="facebook_link" placeholder="Enter facebook link"> 
-			</div> 
-			<div class="col-md-3">  
-			    <input type="number" class="form-control" id="quantity"  placeholder="100" value="1" required> 
-			</div> 
-		</div> 
-	</div> -->
-
 @stop

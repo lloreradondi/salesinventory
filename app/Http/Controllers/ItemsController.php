@@ -55,16 +55,13 @@ class ItemsController extends Controller
 	}
 
     public function update(Request $request, $id) {
-
-
-        // dd($request->data[]);
         $item = Item::find($id);
-        // dd($request->all());
         $item->update($request->data[$id]);
-        // dd($item);
         $updateArray = array("data"=> array($item)); 
         return $updateArray;
     }
+
+
 
 	
 }

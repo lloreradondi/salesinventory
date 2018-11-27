@@ -24,5 +24,7 @@ Route::get('/items/list/{id}', 'ItemsController@list');
 Route::post('/items/save', 'ItemsController@save');
 Route::post('/items/update/{id}', 'ItemsController@update');
 
-Route::post('/orders/save', 'OrdersController@save');
+Route::post('/order/approve', 'OrdersController@approveOrder');
+Route::post('/order/disapprove', 'OrdersController@disapproveOrder');
+Route::post('/order/save', 'OrdersController@save');
 Route::get('/orders/list/{item_code}', 'OrdersController@list');

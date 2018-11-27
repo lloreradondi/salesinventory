@@ -25,19 +25,12 @@ class OrdersController extends Controller
           'clients.last_name')
           ->join('clients', 'orders.client_id', '=', 'clients.id')
           ->where('item_code', '=', $item_code)
+          ->where('orders.status', '=', 1)
           ->get();  
         return array("data"=> $data);
       } else {
         return array("data"=> Order::select('*')->get());
       }
-   		// if (!empty($request->item_code)) {
-   			
-    	// } else {
-    		
-    	// }
-
-    	// return $this->data;
-   		
    }
 
    public function save(Request $request) {
@@ -102,4 +95,49 @@ class OrdersController extends Controller
 
         return $this->data;
 	}
+
+  public function approveOrder(Request $request) {
+    $this->rule = array( 
+        'id'=> 'required'
+    );
+    $this->validate($request->all(), $this->rule);
+
+    if (empty($this->data['error']['error_message'])) {
+      $order = Order::find($request->id);
+      $order->status = 3;
+      $order->save();
+      $this->data['response'] = "Order approved";
+    } 
+    return $this->data;
+  }
+
+  public function disapproveOrder(Request $request) {
+    $this->rule = array( 
+        'id'=> 'required'
+    );
+    $this->validate($request->all(), $this->rule);
+
+    if (empty($this->data['error']['error_message'])) {
+      $order = Order::find($request->id)->get();
+
+      if ($order[0]->status == 2) {
+        $this->data['response']['message'] = "Order already disapproved";
+        return $this->data;
+      }
+
+      $orderQuantity = $order[0]->item_quantity;
+      $item = Item::select('*')
+        ->where('code', '=', $order[0]->item_code);
+      $itemQuantity = $item->get()[0]->quantity;
+      $item->update([
+        'quantity' => $orderQuantity + $itemQuantity
+      ]);
+      $order[0]->status = 2;
+      $order[0]->save();
+      $this->data['response']['quantity_left'] = $orderQuantity + $itemQuantity;
+      $this->data['response']['message'] = "Order successfully disapproved";
+    } 
+    return $this->data;
+  }
+
 }
