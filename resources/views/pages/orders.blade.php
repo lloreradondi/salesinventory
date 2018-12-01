@@ -39,7 +39,12 @@
 
 
 
-  	function submit(response, i) {
+  	function submit(response, i) { 
+  		
+  		if ($("#first_name"+i).val() == "") {
+  			alert("name cannot be empty");
+  			return;
+  		};
   		var itemCode = response.data[i].code;
 		var values = {
             'first_name': document.getElementById('first_name'+i).value,
@@ -66,10 +71,7 @@
         		} else {
         			$("#header_quantity"+i).text(response.response.quantity_left + " REMAINING");  
         		}
-    			$("#first_name"+i).val(""); 
-	        	$("#last_name"+i).val(""); 
-	        	$("#facebook_link"+i).val("");
-	        	$("#quantity"+i).val("1");
+    			
         		alert(response.response.message); 
         		reloadAjaxTable(i, itemCode);
         		resizeAccordion(i);
@@ -78,6 +80,11 @@
         	  
 			
         });
+
+        $("#first_name"+i).val(""); 
+    	$("#last_name"+i).val(""); 
+    	$("#facebook_link"+i).val("");
+    	$("#quantity"+i).val("1");
   	}
 
   	function loadItems() {
