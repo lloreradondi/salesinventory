@@ -26,3 +26,6 @@ Route::get('/items', function() {
 Route::get('/reports', function() {
 	return view('pages.reports');
 });
+Route::get('/itemtype', function() {
+	return view('pages.itemtype');
+});

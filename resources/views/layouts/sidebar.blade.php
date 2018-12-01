@@ -24,6 +24,11 @@
     <i class="fas fa-fw fa-table"></i>
     <span>Reports</span></a>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="itemtype">
+    <i class="fas fa-fw fa-table"></i>
+    <span>Item Type</span></a>
+</li>
 
 <script>
 function loadPage(page) { 

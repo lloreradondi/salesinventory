@@ -11,7 +11,7 @@ class ItemsController extends Controller
     public function list(Request $request, $id) {  
        if ($id == 1) {
            $itemsList = Item::select('*') 
-                ->where('quantity', '>=', 0) 
+                ->where('quantity', '>', 0) 
                 ->orderBy('quantity', 'DESC') 
                 ->get();
        } else {
@@ -54,6 +54,16 @@ class ItemsController extends Controller
 
         return $this->data;
 	}
+
+    public function regenerateItemCodes(Request $request) {
+        $allItems = Item::select('*')->get();
+        foreach ($allItems as $key => $value) {
+            $recordToUpdate = Item::select('*')->where('id', '=', $value->id)->update(array('code' => Item::generateUniqueItemCode()));
+        }
+        $this->data['response'] = "Item codes generation success";
+
+        return $this->data;
+    }
 
     public function update(Request $request, $id) {
         $item = Item::find($id);

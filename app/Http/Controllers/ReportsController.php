@@ -16,6 +16,8 @@ class ReportsController extends Controller
 	      'orders.selling_price', 
 	      'orders.created_at',
 	      'orders.status',
+	      'clients.facebook_link',
+	      DB::raw("DATEDIFF(NOW(), orders.created_at) as 'date_difference'"),
 	      DB::raw('CASE
 					   WHEN orders.status = 1 THEN "PENDING"
 					   WHEN orders.status = 2 THEN "CANCELLED" 
@@ -23,6 +25,7 @@ class ReportsController extends Controller
 				   END as final_status'),
 	      DB::raw("CONCAT(clients.first_name,' ',clients.last_name) as client_name"))
 	      ->join('clients', 'orders.client_id', '=', 'clients.id')  
+	      ->orderBy('orders.created_at', 'DESC')
 	      ->get();  
 	    return array("data"=> $data);
       

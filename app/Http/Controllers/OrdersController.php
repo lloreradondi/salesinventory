@@ -26,10 +26,11 @@ class OrdersController extends Controller
           ->join('clients', 'orders.client_id', '=', 'clients.id')
           ->where('item_code', '=', $item_code)
           ->where('orders.status', '=', 1)
+          ->orderBy('orders.created_at', 'DESC')
           ->get();  
         return array("data"=> $data);
       } else {
-        return array("data"=> Order::select('*')->get());
+        return array("data"=> Order::select('*')->orderBy('created_at', 'DESC')->get());
       }
    }
 
@@ -114,6 +115,12 @@ class OrdersController extends Controller
     $this->validate($request->all(), $this->rule);
 
     if (empty($this->data['error']['error_message'])) {
+      $order = Order::select('*')->where('id', '=', $request->id)->get();
+      if ($order[0]->status == 2) {
+        $this->data['response'] = "This item is already disapproved, try ordering it again.";
+        return $this->data;
+      }
+
       $order = Order::find($request->id);
       $order->status = 3;
       $order->save();

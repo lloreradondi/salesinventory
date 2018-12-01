@@ -100,6 +100,7 @@
 			              "<th>Last Name</th>" +
 			              "<th>Selling Price</th>" +
 			              "<th>Quantity</th>" +
+			              "<th>Date Ordered</th>" +
 			              "<th>Actions</th>" +
 			            "</tr>" +
 			          "</thead>" +
@@ -171,7 +172,7 @@
   		var table = $("#dt"+ i).dataTable();
   		table = dt.DataTable({  
 			destroy: true,
-			deferRender:    true,
+			"aaSorting": [],
 		    ajax: "/api/orders/list/"+code,
 		    type: "GET",
 		    columns: [ 
@@ -180,7 +181,8 @@
 		        { data: "last_name" },
 		        { data: "selling_price" },
 		        { data: "item_quantity" },
-		        { defaultContent: "<i id='approve' class='fas fa-check-circle' style='font-size: 22px;'></i><i id='reject' class='fas fa-times-circle' style=' font-size: 22px;'></i>"}
+		        { data: "created_at" },
+		        { defaultContent: "<i id='approve' class='fas fa-check-circle' style='font-size: 22px; display:none;'></i><i id='reject' class='fas fa-times-circle' style=' font-size: 22px;'></i>"}
 		    ]
 		} );
 
@@ -233,11 +235,32 @@
         });
 	}
 
+	function regenerateItemCodes() {
+		$.ajax({
+          type: "POST", 
+          url: 'api/items/update/codes',
+          context: document.body
+        }).done(function(response) { 
+        	alert(response.response);
+        	loadItems();  
+        });
+	}
+ 
   	$( document ).ready(function() {  
          loadItems();
+
+     	$('#newSession').click(function(){
+     		regenerateItemCodes();	
+     	});
+
+
+
     });  
   </script>
 @stop
-@section('content') 
+@section('content')  
+	<div class="col-md-12">
+		<button id="newSession" class="btn btn-primary">START NEW SESSION</button>
+	</div>
 	<div id="myBody"></div>
 @stop
