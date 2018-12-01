@@ -31,3 +31,7 @@ Route::post('/order/save', 'OrdersController@save');
 Route::get('/orders/list/{item_code}', 'OrdersController@list');
 
 Route::get('/reports/list', 'ReportsController@list');
+
+Route::get('/itemtypes/list', 'ItemTypesController@list');
+Route::post('/itemtypes/save', 'ItemTypesController@save');
+Route::post('/itemtypes/update/{id}', 'ItemTypesController@update');
