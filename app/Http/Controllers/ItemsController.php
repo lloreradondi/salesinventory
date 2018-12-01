@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Item;
-
+use App\ItemType;
 class ItemsController extends Controller
 {
     public function list(Request $request, $id) {  
@@ -26,25 +26,27 @@ class ItemsController extends Controller
             'name'=> 'required',
             'beginning_price'=> 'required',
             'selling_price'=> 'required',
-            'quantity'=> 'required'
+            'quantity'=> 'required',
+            'item_type_id'=> 'required'
         );
         $this->validate($request->all(), $this->rule);
 
         if (empty($this->data['error']['error_message'])) {
 
         	$itemRecord = Item::select('*')->where('name', '=', $request->name)->get();
-
+            $itemType = ItemType::itemTypeRecord($request->item_type_id);
         	if (count($itemRecord) > 0) {
         		$this->data['response'] = 'Item already existing in database';
         		return $this->data;
         	}
 
  			$isItemInserted = Item::insert(array(
- 				'code' => Item::generateUniqueItemCode(),
+ 				'code' => Item::generateUniqueItemCode($itemType[0]->code),
  				'name' => $request->name,
  				'beginning_price' => $request->beginning_price,
  				'selling_price' => $request->selling_price,
- 				'quantity' => $request->quantity
+ 				'quantity' => $request->quantity,
+                'item_type_id' => $request->item_type_id
  			));
 
  			if ($isItemInserted) {
@@ -58,9 +60,20 @@ class ItemsController extends Controller
     public function regenerateItemCodes(Request $request) {
         $allItems = Item::select('*')->get();
         foreach ($allItems as $key => $value) {
-            $recordToUpdate = Item::select('*')->where('id', '=', $value->id)->update(array('code' => Item::generateUniqueItemCode()));
+            $itemType = ItemType::itemTypeRecord($value->item_type_id);
+            $recordToUpdate = Item::select('*')
+                            ->where('id', '=', $value->id)
+                            ->update(
+                                array(
+                                    'code' => Item::generateUniqueItemCode($itemType[0]->code)
+                                ));
         }
-        $this->data['response'] = "Item codes generation success";
+        if (count($allItems) > 0) {
+            $this->data['response'] = "Item codes generation success";
+        } else {
+            $this->data['response'] = "No code to update.. please add an item.. redirecting to items...";
+        }
+        
 
         return $this->data;
     }

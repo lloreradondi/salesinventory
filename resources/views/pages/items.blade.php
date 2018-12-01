@@ -9,7 +9,7 @@
     $( document ).ready(function() {  
     	var values = {'all':1}; 
     	loadItems();
-  	    
+  	    loadItemTypes();
         $('#show_item_modal').on( 'click', function () {
 	    	$('#myModal').modal('show'); 
 	    });
@@ -77,7 +77,7 @@
 				    ]
 				} );	
 
-	    	$('#dt').on( 'click', 'tbody td:not(:first-child)', function (e) {
+	    	$('#dt').on( 'click', 'tbody td:not(:nth-child(1)) ', function (e) { 
 		        editor.inline( this );
 		    });
 	    }
@@ -87,10 +87,20 @@
 	    	var beginning_price =  document.getElementById('beginning_price').value;
 	    	var selling_price = document.getElementById('selling_price').value;
 	    	var quantity = document.getElementById('quantity').value;
+
+	    	if (!$('#itemtype').find(":selected").val()) {
+	    		alert('add item type first to continue, You will now be redirected to item types ...');
+	    		$(location).attr('href', 'itemtype');
+	    		return;
+	    	}
+
+
 	    	if (!name) {
 	    		alert('Name cannot be empty');
 	    		return;
 	    	}
+
+
 
 	    	if (beginning_price < 0 || selling_price <0 || quantity < 0) {
 	    		alert('Number inputs cannot be negative');
@@ -100,7 +110,8 @@
 	            'name': name,
 	            'beginning_price': beginning_price,
 	            'selling_price': selling_price,
-	            'quantity': quantity
+	            'quantity': quantity,
+	            'item_type_id': $('#itemtype').find(":selected").val()
 		    }; 
 	        $.ajax({
 	          data: values,
@@ -122,6 +133,21 @@
 	    	$("#quantity").val("10");
 	    }
 
+	    function loadItemTypes() {
+	    	$.ajax({
+	          data: values,
+	          type: "GET",
+	          url: 'api/itemtypes/list',
+	          context: document.body
+	        }).done(function(response) {
+	        	$.each(response.data, function (i, item) {
+				    $('#itemtype').append($('<option>', { 
+				        value: item.id,
+				        text : item.name 
+				    }));
+				});
+	        });
+	    }
  
     }); 
    </script>
@@ -181,6 +207,10 @@
 			  <div class="form-group">
 			    <label for="quantity">Quantity:</label>
 			    <input type="number" class="form-control" id="quantity" value="10">
+			  </div> 
+			  <div class="form-group">
+			    <label for="itemtype">Item Type:</label>
+			    <select class="form-control" id="itemtype"/>
 			  </div> 
 			  <!-- <button id="add_item" type="submit" class="btn btn-default">Submit</button>  -->
         </div>

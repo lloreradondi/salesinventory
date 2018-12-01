@@ -249,6 +249,10 @@
           context: document.body
         }).done(function(response) { 
         	alert(response.response);
+        	if (response.response.toLowerCase().indexOf("redirecting to items") >= 0) {
+        		$(location).attr('href', 'items');
+        		return;	
+        	} 
         	loadItems();  
         });
 	}

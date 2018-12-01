@@ -8,9 +8,9 @@ class Item extends Model
 {
 
 	protected $fillable = [
-	    'name', 'code', 'beginning_price', 'selling_price', 'quantity'
+	    'name', 'beginning_price', 'selling_price', 'quantity'
 	];
-    public static function generateUniqueItemCode() {
+    public static function generateUniqueItemCode($itemCode) {
     	$characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     	$string = '';
     	$random_string_length = 4;
@@ -18,10 +18,10 @@ class Item extends Model
 		 for ($i = 0; $i < $random_string_length; $i++) {
 		      $string .= $characters[mt_rand(0, $max)];
 		 }
-		if (!Item::isItemCodeNotExisting($string)) {
-			Item::generateUniqueItemCode();
+		if (!Item::isItemCodeNotExisting($itemCode.$string)) {
+			Item::generateUniqueItemCode($itemCode);
 		}
-    	return $string;
+    	return $itemCode.$string;
     }
 
     public static function isItemCodeNotExisting($itemCode) {
@@ -32,4 +32,6 @@ class Item extends Model
 		}
 		return $isItemCodeNotExisting;
 	}
+
+	
 }

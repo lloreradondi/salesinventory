@@ -67,14 +67,13 @@
 	    function addItem() {
 	    	var name = document.getElementById('name').value;
 	    	var code =  document.getElementById('code').value; 
-	    	if (!name || !code) {
+	    	if (!$.trim(name) || !$.trim(code)) {
 	    		alert('Name/Code cannot be empty');
 	    		return;
-	    	}
- 
+	    	} 
 	    	var values = {
-	            'name': name,
-	            'code': code
+	            'name': $.trim(name),
+	            'code': $.trim(code.replace(/ /g,''))
 		    }; 
 	        $.ajax({
 	          data: values,
@@ -91,7 +90,7 @@
 
 	    function defaults() {
 	    	$("#name").val(""); 
-	    	$("#code").val("1000"); 
+	    	$("#code").val("ABC"); 
 	    }
 
  
