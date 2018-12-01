@@ -229,23 +229,7 @@
         	}
 
         	reloadAjaxTable(i, code);
-        	resizeAccordion(i);
-      //   	if (response.response.quantity_left <= 0) {
-    			
-    		// } else {
-    		// 	$("#header_quantity"+i).text(response.response.quantity_left + " REMAINING");  
-    		// }
-
-
-       //  	if (response.response.message != "Order already disapproved") {
-    			// $("#header_quantity"+i).text(response.response.quantity_left + " REMAINING");
-       //  	} else {
-
-       //  	}
-        	// alert(response.response); 
-        	// reloadAjaxTable(i, code);
-        	// resizeAccordion(i);
-        	// console.log(i);
+        	resizeAccordion(i); 
         });
 	}
 

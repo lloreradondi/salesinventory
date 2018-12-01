@@ -19,6 +19,11 @@
     <i class="fas fa-fw fa-table"></i>
     <span>Clients</span></a>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="reports">
+    <i class="fas fa-fw fa-table"></i>
+    <span>Reports</span></a>
+</li>
 
 <script>
 function loadPage(page) { 

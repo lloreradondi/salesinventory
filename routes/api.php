@@ -28,3 +28,5 @@ Route::post('/order/approve', 'OrdersController@approveOrder');
 Route::post('/order/disapprove', 'OrdersController@disapproveOrder');
 Route::post('/order/save', 'OrdersController@save');
 Route::get('/orders/list/{item_code}', 'OrdersController@list');
+
+Route::get('/reports/list', 'ReportsController@list');

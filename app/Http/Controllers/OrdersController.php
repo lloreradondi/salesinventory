@@ -40,10 +40,11 @@ class OrdersController extends Controller
             'item_quantity'=> 'required',
             'beginning_price'=> 'required',
             'selling_price'=> 'required',
+            'first_name' => 'required',
+            'last_name' => 'required'
         );
-        $this->validate($request->all(), $this->rule);
-
-        if (empty($this->data['error']['error_message'])) {
+        $this->validate($request->all(), $this->rule); 
+        if (count(($this->data['error']['error_message'])) < 1) {
 
         	$itemRecord = DB::table('items')
         				->select('*')
@@ -64,11 +65,21 @@ class OrdersController extends Controller
 			}
 
         	$clientId = "";
-        	$clientRecord = DB::table('clients')
-    					->select('*')
-    					->where('first_name', '=', $request->first_name)
-    					->where('last_name', '=', $request->last_name)
-    					->get();
+          if (!empty($request->facebook_link)) {
+            $clientRecord = DB::table('clients')
+              ->select('*')
+              ->where('first_name', '=', $request->first_name)
+              ->where('last_name', '=', $request->last_name)
+              ->orWhere('facebook_link', '=', $request->facebook_link)
+              ->get();
+          } else {
+             $clientRecord = DB::table('clients')
+              ->select('*')
+              ->where('first_name', '=', $request->first_name)
+              ->where('last_name', '=', $request->last_name) 
+              ->get();
+          }
+        	
     		if (count($clientRecord) < 1) {
     			$clientId = Client::insertGetId(array(
         		'first_name' => $request->first_name,

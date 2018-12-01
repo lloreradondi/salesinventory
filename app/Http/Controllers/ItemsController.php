@@ -11,7 +11,8 @@ class ItemsController extends Controller
     public function list(Request $request, $id) {  
        if ($id == 1) {
            $itemsList = Item::select('*') 
-                ->where('quantity', '>', 0)
+                ->where('quantity', '>=', 0) 
+                ->orderBy('quantity', 'DESC') 
                 ->get();
        } else {
             $itemsList = Item::select('*') 

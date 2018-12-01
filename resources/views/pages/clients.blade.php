@@ -34,7 +34,8 @@
 
           $.each(response.response, function(i, item) { 
               mytable.row.add([response.response[i].last_name, response.response[i].first_name, response.response[i].middle_name,
-                               response.response[i].cellphone_number, response.response[i].telephone_number, response.response[i].facebook_link
+                               response.response[i].cellphone_number, response.response[i].telephone_number, 
+                               response.response[i].facebook_link
                               ]);
           }) 
           mytable.draw(); 

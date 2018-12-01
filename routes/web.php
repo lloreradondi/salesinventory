@@ -23,3 +23,6 @@ Route::get('/clients', function() {
 Route::get('/items', function() {
 	return view('pages.items');
 });
+Route::get('/reports', function() {
+	return view('pages.reports');
+});
