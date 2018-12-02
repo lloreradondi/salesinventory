@@ -4,6 +4,78 @@
 @stop
 @section('javascript_files')
   @include('javascript_files') 
+  <script type="text/javascript">
+    $( document ).ready(function() { 
+      loadData();
+      loadItems();
+      function loadData() {
+        $.ajax({ 
+          type: "GET",
+          url: 'api/reports/dashboard',
+          context: document.body
+        }).done(function(response) {  
+          var earnings = "";
+          var onHold = "";
+          $.each(response.data, function(i, item) {  
+            if (item.final_status == "CANCELLED") {
+              $('#cancelled').text(item.total + " CANCELLED ORDER/S");
+            } else if (item.final_status == "PENDING") {
+              $('#pending').text(item.total + " PENDING ORDER/S");
+              onHold = "CAPITAL : " + item.capital + "<br>" +  "SELLING : " + item.earnings + "<br>" + "PROFIT : " + (item.earnings - item.capital);
+              $('#onhold').html(onHold);
+              $('#onhold_subtitle').text('ESTIMATED EARNINGS FROM ' + item.total + " ORDER/S")
+
+            } else if (item.final_status == "COMPLETED") {
+              $('#completed').text(item.total + " PAID ORDER/S");
+              earnings = "CAPITAL : " + item.capital + "<br>" +  "SELLING : " + item.earnings + "<br>" + "PROFIT : " + (item.earnings - item.capital)
+              $('#earnings').html(earnings);
+              $('#earning_subtitle').text('EARNINGS FROM ' + item.total + " ORDER/S")
+            }
+          })
+         
+
+        });
+      }
+ 
+
+      function loadItems() { 
+          var dt = $('#dt');
+          var table = $('#dt').DataTable( { 
+              dom: 'lBfrtip',
+              responsive: true,
+              bAutoWidth: false, 
+              buttons: [
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open'
+                        }
+                    ], 
+              destroy: true,
+              ajax: "/api/reports/remainingItems",
+              type: "GET",
+              "aaSorting": [],
+              columns: [ 
+                { data: "name" },
+                { data: "item_type"},
+                  { data: "selling_price" },
+                  { data: "beginning_price" }, 
+                  { data: "quantity" } 
+              ],
+              initComplete: function(settings, json){ 
+                   var info = this.api().page.info();
+                   if (info.recordsTotal < 1) {
+                      if (confirm("It seems like you have no items yet. Would you like to add?!")) {
+                        $(location).attr('href', 'items');
+                      } 
+                   } 
+               }
+          } );  
+        }
+    });
+
+    
+  </script>
+  
 @stop
 @section('content')
 <div id="content-wrapper">
@@ -20,13 +92,13 @@
 
           <!-- Icon Cards-->
           <div class="row">
-            <div class="col-xl-3 col-sm-6 mb-3">
+            <div class="col-xl-4 col-sm-6 mb-3">
               <div class="card text-white bg-primary o-hidden h-100">
                 <div class="card-body">
                   <div class="card-body-icon">
                     <i class="fas fa-fw fa-comments"></i>
                   </div>
-                  <div class="mr-5">26 Completed Items!</div>
+                  <div class="mr-5" id="completed">N/A!</div>
                 </div>
                 <a class="card-footer text-white clearfix small z-1" href="#">
                   <span class="float-left">View Details</span>
@@ -36,13 +108,13 @@
                 </a>
               </div>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-3">
+            <div class="col-xl-4 col-sm-6 mb-3">
               <div class="card text-white bg-warning o-hidden h-100">
                 <div class="card-body">
                   <div class="card-body-icon">
                     <i class="fas fa-fw fa-list"></i>
                   </div>
-                  <div class="mr-5">11 Pending Items!</div>
+                  <div class="mr-5" id="pending">N/A!</div>
                 </div>
                 <a class="card-footer text-white clearfix small z-1" href="#">
                   <span class="float-left">View Details</span>
@@ -51,30 +123,14 @@
                   </span>
                 </a>
               </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 mb-3">
-              <div class="card text-white bg-success o-hidden h-100">
-                <div class="card-body">
-                  <div class="card-body-icon">
-                    <i class="fas fa-fw fa-shopping-cart"></i>
-                  </div>
-                  <div class="mr-5">123 Paid Items!</div>
-                </div>
-                <a class="card-footer text-white clearfix small z-1" href="#">
-                  <span class="float-left">View Details</span>
-                  <span class="float-right">
-                    <i class="fas fa-angle-right"></i>
-                  </span>
-                </a>
-              </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 mb-3">
+            </div> 
+            <div class="col-xl-4 col-sm-6 mb-3">
               <div class="card text-white bg-danger o-hidden h-100">
                 <div class="card-body">
                   <div class="card-body-icon">
                     <i class="fas fa-fw fa-life-ring"></i>
                   </div>
-                  <div class="mr-5">13 Bogus Buyers!</div>
+                  <div class="mr-5" id="cancelled">N/A!</div>
                 </div>
                 <a class="card-footer text-white clearfix small z-1" href="#">
                   <span class="float-left">View Details</span>
@@ -85,74 +141,66 @@
               </div>
             </div>
           </div>
+
+          <!-- Icon Cards-->
+          <div class="row">
+            <div class="col-xl-6 col-sm-6 mb-3">
+              <div class="card text-white bg-primary o-hidden h-100">
+                <div class="card-body">
+                  <div class="card-body-icon">
+                    <i class="fas fa-fw fa-comments"></i>
+                  </div>
+                  <div class="mr-5" id="earnings">N/A!</div>
+                </div>
+                <a class="card-footer text-white clearfix small z-1" href="#">
+                  <span class="float-left" id="earning_subtitle">EARNINGS!</span>
+                  <span class="float-right">
+                    <i class="fas fa-angle-right"></i>
+                  </span>
+                </a>
+              </div>
+            </div>
+            <div class="col-xl-6 col-sm-6 mb-3">
+              <div class="card text-white bg-warning o-hidden h-100">
+                <div class="card-body">
+                  <div class="card-body-icon">
+                    <i class="fas fa-fw fa-list"></i>
+                  </div>
+                  <div class="mr-5" id="onhold">N/A!</div>
+                </div>
+                <a class="card-footer text-white clearfix small z-1" href="#">
+                  <span class="float-left" id="onhold_subtitle">PENDING!</span>
+                  <span class="float-right">
+                    <i class="fas fa-angle-right"></i>
+                  </span>
+                </a>
+              </div>
+            </div>  
+          </div>
+
+
  
 
           <!-- DataTables Example -->
           <div class="card mb-3">
             <div class="card-header">
               <i class="fas fa-table"></i>
-              Recent Transactions</div>
+              STOCKS</div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dt" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Position</th>
-                      <th>Office</th>
-                      <th>Age</th>
-                      <th>Start date</th>
-                      <th>Salary</th>
+                      <th>Item Type</th>
+                      <th>Beginning Price</th>
+                      <th>Selling Price</th>
+                      <th>Remaining Stock</th> 
                     </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>Name</th>
-                      <th>Position</th>
-                      <th>Office</th>
-                      <th>Age</th>
-                      <th>Start date</th>
-                      <th>Salary</th>
-                    </tr>
-                  </tfoot>
-                  <tbody>
-                    <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td>$320,800</td>
-                    </tr>
-                    <tr>
-                      <td>Garrett Winters</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>63</td>
-                      <td>2011/07/25</td>
-                      <td>$170,750</td>
-                    </tr>
-                    <tr>
-                      <td>Ashton Cox</td>
-                      <td>Junior Technical Author</td>
-                      <td>San Francisco</td>
-                      <td>66</td>
-                      <td>2009/01/12</td>
-                      <td>$86,000</td>
-                    </tr>
-                    <tr>
-                      <td>Cedric Kelly</td>
-                      <td>Senior Javascript Developer</td>
-                      <td>Edinburgh</td>
-                      <td>22</td>
-                      <td>2012/03/29</td>
-                      <td>$433,060</td>
-                    </tr>
-                  </tbody>
+                  </thead>  
                 </table>
               </div>
-            </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            </div> 
           </div>
 
         </div>

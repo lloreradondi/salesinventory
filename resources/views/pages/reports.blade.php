@@ -36,6 +36,7 @@
                 { data: "item_code" }, 
                 { data: "selling_price" },
                 { data: "item_quantity" },
+                { data: "total_price" },
                 { data: "final_status" },
                 { 
                   data: "facebook_link", 
@@ -135,14 +136,14 @@
                 <th>Code</th> 
                 <th>Selling Price</th>
                 <th>Quantity</th> 
+                <th>Total</th> 
                 <th>Status</th> 
                 <th>Facebook link</th> 
                 <th>Date Ordered</th> 
                 <th>Date diff.</th>
                 <th>Actions</th>
               </tr>
-            </thead>
-             
+            </thead> 
           </table>
         </div>
       </div>

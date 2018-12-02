@@ -94,6 +94,11 @@
 	    		return;
 	    	}
 
+	    	if (parseFloat(beginning_price) > parseFloat(selling_price)) {
+	    		alert("beginning price cannot be greater than selling price");
+	    		return;
+	    	}
+
 
 	    	if (!name) {
 	    		alert('Name cannot be empty');
