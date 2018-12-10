@@ -6,6 +6,21 @@
 @section('javascript_files')
   @include('javascript_files')  
   <script>
+
+  	function updateItem(id, data, name) {
+		var values = {
+            [name]: data.innerHTML,
+	    }; 
+    	console.log(values);
+		$.ajax({
+          data: values,
+          type: "POST",
+          url: 'api/items/update/' + id
+        }).done(function(response) {
+
+        });
+	}
+
     $( document ).ready(function() {  
     	var values = {'all':1}; 
     	loadItems();
@@ -36,33 +51,33 @@
 	    }); 
 
 	    function loadItems() {
-	    	var editor = new $.fn.dataTable.Editor( {
-	    	ajax: "api/items/update/_id_", 
-		    table: "#dt", 
-		    idSrc:  'id',
-		    fields: [
-		    	{
-		            label: "Id:",
-		            name: "Id"
-		        },
-		    	{
-		            label: "Name:",
-		            name: "name"
-		        }, {
-		            label: "Code:",
-		            name: "code"
-		        }, {
-		            label: "Beginning Price:",
-		            name: "beginning_price"
-		        }, {
-		            label: "Selling Price:",
-		            name: "selling_price"
-		        }, {
-		            label: "Quantity:",
-		            name: "quantity"
-		        }
-		    ]
-			} );
+	  //   	var editor = new $.fn.dataTable.Editor( {
+	  //   	ajax: "api/items/update/_id_", 
+		 //    table: "#dt", 
+		 //    idSrc:  'id',
+		 //    fields: [
+		 //    	{
+		 //            label: "Id:",
+		 //            name: "Id"
+		 //        },
+		 //    	{
+		 //            label: "Name:",
+		 //            name: "name"
+		 //        }, {
+		 //            label: "Code:",
+		 //            name: "code"
+		 //        }, {
+		 //            label: "Beginning Price:",
+		 //            name: "beginning_price"
+		 //        }, {
+		 //            label: "Selling Price:",
+		 //            name: "selling_price"
+		 //        }, {
+		 //            label: "Quantity:",
+		 //            name: "quantity"
+		 //        }
+		 //    ]
+			// } );
 	    	$('#dt').DataTable( {  
 	    			destroy: true,
 				    ajax: "/api/items/list/0",
@@ -77,9 +92,9 @@
 				    ]
 				} );	
 
-	    	$('#dt').on( 'click', 'tbody td:not(:nth-child(1)) ', function (e) { 
-		        editor.inline( this );
-		    });
+	    	// $('#dt').on( 'click', 'tbody td:not(:nth-child(1)) ', function (e) { 
+		    //     editor.inline( this );
+		    // });
 	    }
 
 	    function addItem() {
@@ -142,7 +157,7 @@
 	    	$.ajax({
 	          data: values,
 	          type: "GET",
-	          url: 'api/itemtypes/list',
+	          url: 'api/itemtypes/list/0',
 	          context: document.body
 	        }).done(function(response) {
 	        	$.each(response.data, function (i, item) {

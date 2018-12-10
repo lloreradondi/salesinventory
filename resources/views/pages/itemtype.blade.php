@@ -6,6 +6,24 @@
 @section('javascript_files')
   @include('javascript_files')  
   <script>
+
+  	function updateItem(id, data, column) {
+
+
+		var values = {
+            [column]: data.innerHTML,
+	    }; 
+    	console.log(values);
+		$.ajax({
+          data: values,
+          type: "POST",
+          url: 'api/itemtypes/update/' + id
+        }).done(function(response) {
+        	
+        });
+	}
+
+
     $( document ).ready(function() {  
     	var values = {'all':1}; 
     	loadItems();
@@ -26,30 +44,30 @@
 	    });
 
 	    function loadItems() {
-	    	var editor = new $.fn.dataTable.Editor( {
-	    	ajax: "api/itemtypes/update/_id_", 
-		    table: "#dt", 
-		    idSrc:  'id',
-		    fields: [
-		    	{
-		            label: "Id:",
-		            name: "Id"
-		        },
-		    	{
-		            label: "Name:",
-		            name: "name"
-		        }, {
-		            label: "Code:",
-		            name: "code"
-		        }, {
-		            label: "Date Created:",
-		            name: "created_at"
-		        }
-		    ]
-			} );
+	  //   	var editor = new $.fn.dataTable.Editor( {
+	  //   	ajax: "api/itemtypes/update/_id_", 
+		 //    table: "#dt", 
+		 //    idSrc:  'id',
+		 //    fields: [
+		 //    	{
+		 //            label: "Id:",
+		 //            name: "Id"
+		 //        },
+		 //    	{
+		 //            label: "Name:",
+		 //            name: "name"
+		 //        }, {
+		 //            label: "Code:",
+		 //            name: "code"
+		 //        }, {
+		 //            label: "Date Created:",
+		 //            name: "created_at"
+		 //        }
+		 //    ]
+			// } );
 	    	$('#dt').DataTable( {  
 	    			destroy: true,
-				    ajax: "/api/itemtypes/list",
+				    ajax: "/api/itemtypes/list/1",
 				    type: "GET",
 				    columns: [ 
 				    	{ data: "id" },

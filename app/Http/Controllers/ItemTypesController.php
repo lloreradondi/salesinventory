@@ -6,10 +6,21 @@ use Illuminate\Http\Request;
 use App\ItemType;
 class ItemTypesController extends Controller
 {
-    public function list(Request $request) {  
+    public function list(Request $request, $identifier) {  
        $itemsTypesList = ItemType::select('*') 
                 ->get();
-       return array("data"=> $itemsTypesList);
+
+
+        $data = [];
+       foreach ($itemsTypesList as $key => $value) {
+           $data[] = array(
+            'id' => $value->id,
+            'created_at' => date('F d, Y',strtotime($value->created_at)),
+            'name' => "<p id='$value->id' onblur='updateItem($value->id, this, \"name\")' contenteditable='true'>".$value->name."</p>",
+            'code' => "<p id='$value->id' onblur='updateItem($value->id, this, \"code\")' contenteditable='true'>".$value->code."</p>"
+            );
+       }
+       return array("data"=> empty($identifier) ? $itemsTypesList : $data);
 	}
 
 	public function save(Request $request) {  
@@ -43,9 +54,15 @@ class ItemTypesController extends Controller
 	}
 
 	public function update(Request $request, $id) {
-        $item = ItemType::find($id); 
-        $item->update($request->data[$id]);
+        $item = ItemType::find($id);
+        $item->update($request->all());
         $updateArray = array("data"=> array($item)); 
         return $updateArray;
+
+
+        // $item = ItemType::find($id); 
+        // $item->update($request->data[$id]);
+        // $updateArray = array("data"=> array($item)); 
+        // return $updateArray;
     }
 }

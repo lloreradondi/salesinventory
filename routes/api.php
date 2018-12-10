@@ -35,6 +35,6 @@ Route::get('/reports/dashboard', 'ReportsController@dashboard');
 Route::get('/reports/remainingItems', 'ReportsController@remainingItems');
 
 
-Route::get('/itemtypes/list', 'ItemTypesController@list');
+Route::get('/itemtypes/list/{id}', 'ItemTypesController@list');
 Route::post('/itemtypes/save', 'ItemTypesController@save');
 Route::post('/itemtypes/update/{id}', 'ItemTypesController@update');

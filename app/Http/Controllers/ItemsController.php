@@ -18,7 +18,21 @@ class ItemsController extends Controller
             $itemsList = Item::select('*') 
                 ->get();
        } 
-       return array("data"=> $itemsList);
+
+
+       $data = [];
+       foreach ($itemsList as $key => $value) {
+           $data[] = array(
+            'id' => $value->id,
+            'name' => "<p id='$value->id' onblur='updateItem($value->id, this, \"name\")' contenteditable='true'>".$value->name."</p>",
+            'code' => $value->code,
+            'beginning_price' => $value->beginning_price,
+            'selling_price' => $value->selling_price,
+            'quantity' =>$value->quantity
+            );
+       }
+
+       return array("data"=> $data);
 	}
 
 	public function save(Request $request) {  
@@ -80,9 +94,15 @@ class ItemsController extends Controller
 
     public function update(Request $request, $id) {
         $item = Item::find($id);
-        $item->update($request->data[$id]);
+        $item->update($request->all());
         $updateArray = array("data"=> array($item)); 
         return $updateArray;
+
+
+        // $item = Item::find($id);
+        // $item->update($request->data[$id]);
+        // $updateArray = array("data"=> array($item)); 
+        // return $updateArray;
     }
 
 
